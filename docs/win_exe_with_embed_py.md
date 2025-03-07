@@ -118,9 +118,15 @@ After creating your executable folder, you can package it into an MSI installer 
 Set these variables for consistent naming throughout the process:
 
 ```batch
-set APP_NAME=OpenMS-StreamlitTemplateApp
-set APP_UpgradeCode=4abc2e23-3ba5-40e4-95c9-09e6cb8ecaeb
+APP_NAME=OpenMS-StreamlitTemplateApp
+APP_UpgradeCode=4abc2e23-3ba5-40e4-95c9-09e6cb8ecaeb
 ```
+
+To create a new GUID for your application's UpgradeCode, you can use:
+
+-  PowerShell: `[guid]::NewGuid().ToString()`
+-  Online GUID generator: https://www.guidgen.com/
+-  Windows Command Prompt: `powershell -Command "[guid]::NewGuid().ToString()"`
 
 ### 2. Install WiX Toolset
 
@@ -142,11 +148,8 @@ set APP_UpgradeCode=4abc2e23-3ba5-40e4-95c9-09e6cb8ecaeb
 2. Create Readme.txt:
 
    ```batch
-   echo Welcome to %APP_NAME% app! > SourceDir\Readme.txt
-   echo. >> SourceDir\Readme.txt
-   echo To launch the application: >> SourceDir\Readme.txt
-   echo 1. Navigate to the installation directory. >> SourceDir\Readme.txt
-   echo 2. Double-click on the file: %APP_NAME%.bat or %APP_NAME% shortcut. >> SourceDir\Readme.txt
+   # Create a Readme.txt file in the SourceDir folder with instructions
+   # for launching the application
    ```
 
 3. Add necessary assets:
@@ -249,11 +252,14 @@ set APP_UpgradeCode=4abc2e23-3ba5-40e4-95c9-09e6cb8ecaeb
 1. Compile WiX source files:
 
    ```batch
+   # Generate wixobj files from the WiX source files
    wix\candle.exe streamlit_exe.wxs streamlit_exe_files.wxs
    ```
 
 2. Link and create MSI:
    ```batch
+   # Create the MSI installer from the wixobj files
+   # The -sice:ICE60 flag stops a warning about duplicate component GUIDs, which can happen when heat.exe auto-generates components
    wix\light.exe -ext WixUIExtension -sice:ICE60 -o %APP_NAME%.msi streamlit_exe_files.wixobj streamlit_exe.wixobj
    ```
 
